@@ -1,6 +1,3 @@
-const basicUrl = 'https://vue3-course-api.hexschool.io';
-const signinApiUrl = '/v2/admin/signin';
-
 const usernameInput = document.querySelector('#username')
 const passwordInput = document.querySelector('#password')
 const btnLogin = document.querySelector('.btn')
@@ -11,6 +8,8 @@ const { createApp } = Vue;
 const app = {
     data() {
         return {
+            basicUrl: 'https://vue3-course-api.hexschool.io',
+            signinApiUrl: '/v2/admin/signin',
             user: {
                 username: '',
                 password: '',
@@ -19,7 +18,7 @@ const app = {
     },
     methods: {
         siginApi() {
-            axios.post(`${basicUrl}${signinApiUrl}`, this.user)
+            axios.post(`${this.basicUrl}${this.signinApiUrl}`, this.user)
                 .then((res) => {
                     //取出 token 與 到期日期的時間戳 res中取得token,expired
                     const { token, expired } = res.data;
