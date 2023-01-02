@@ -1,6 +1,5 @@
 const basicUrl = 'https://vue3-course-api.hexschool.io';
 const signinApiUrl = '/v2/admin/signin';
-const path = 'firebro';
 
 const usernameInput = document.querySelector('#username')
 const passwordInput = document.querySelector('#password')
@@ -22,10 +21,10 @@ const app = {
         siginApi() {
             axios.post(`${basicUrl}${signinApiUrl}`, this.user)
                 .then((res) => {
-                    //取出 token 與 到期日期的時間戳
+                    //取出 token 與 到期日期的時間戳 res中取得token,expired
                     const { token, expired } = res.data;
                     console.log(token,expired)
-                    //建立Cookie,token與有效日期
+                    //建立Cookie,token與有效日期 document.cookie = `命名cookie=${token}; expires=${expired};`;
                     document.cookie = `firenbro42=${token}; expires=${expired};`;
                     //使用axios時，帶入token
                     axios.defaults.headers.common['Authorization'] = token;

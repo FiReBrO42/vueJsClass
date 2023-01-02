@@ -1,9 +1,3 @@
-
-const basicUrl = 'https://vue3-course-api.hexschool.io';
-const checkApi = '/v2/api/user/check';
-const productsApi = '/v2/api/firebro42/admin/products';
-
-const path = 'firebro';
 // 產品資料格式
 //定義資料
 const products = [];
@@ -15,6 +9,8 @@ const { createApp } = Vue;
 const app = {
   data() {
     return {
+      apiUrl: 'https://vue3-course-api.hexschool.io/v2',
+      apiPath: 'firebro42',
       //建立空物件
       tempProducts : {},
       //products帶入已宣告陣列資料 縮寫法 -> products:products
@@ -24,7 +20,7 @@ const app = {
   methods:{
     getProducts(){
       //取得資料productsApi
-      axios.get(`${basicUrl}${productsApi}`)
+      axios.get(`${this.apiUrl}/api/${this.apiPath}/admin/products`)
       .then((res)=>{
         //data的products
         this.products=res.data.products
@@ -32,7 +28,7 @@ const app = {
     },
     checkFn() {
       //驗證checkApi
-      axios.post(`${basicUrl}${checkApi}`)
+      axios.post(`${this.apiUrl}/api/user/check`)
         .then(res => {
           alert('確認使用者已登入')
         })
@@ -46,6 +42,7 @@ const app = {
     },
   },
   mounted(){
+    //let 定義變數名 = document.cookie.replace(/(?:(?:^|.*;\s*)命名的cookie\s*\=\s*([^;]*).*$)|^.*$/, "$1");
     let token = document.cookie.replace(/(?:(?:^|.*;\s*)firenbro42\s*\=\s*([^;]*).*$)|^.*$/, "$1");
     //當每次執行時，自動帶入token
     axios.defaults.headers.common['Authorization'] = token;//cookie有儲存時
