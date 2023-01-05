@@ -31,9 +31,9 @@ const app = {
       axios.post(`${this.apiUrl}/api/user/check`)
         .then(res => {
           alert('確認使用者已登入')
+          this.getProducts();
         })
         .catch(err => {
-          console.log(err);
           //警告提示
           alert('使用者未登入')
           //轉址回登入頁面
@@ -47,7 +47,6 @@ const app = {
     //當每次執行時，自動帶入token
     axios.defaults.headers.common['Authorization'] = token;//cookie有儲存時
     this.checkFn();
-    this.getProducts();
   }
 }
 //安裝 createApp(生成的應用宣告名字).mount('DOM選取')

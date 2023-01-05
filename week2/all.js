@@ -22,7 +22,6 @@ const app = {
                 .then((res) => {
                     //取出 token 與 到期日期的時間戳 res中取得token,expired
                     const { token, expired } = res.data;
-                    console.log(token,expired)
                     //建立Cookie,token與有效日期 document.cookie = `命名cookie=${token}; expires=${expired};`;
                     document.cookie = `firenbro42=${token}; expires=${expired};`;
                     //使用axios時，帶入token
@@ -33,7 +32,6 @@ const app = {
                 .catch((err) => {
                     //警告,API中的錯誤時的提示訊息,
                     alert(err.data.message)
-                    console.log(err);
                 })
         }
     }
