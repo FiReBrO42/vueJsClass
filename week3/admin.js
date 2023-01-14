@@ -4,21 +4,17 @@ const app = {
         return {
             products: [],
             template: {
-                title: "測試的產品",
-                category: "測試分類",
-                origin_price: 1000,
-                price: 500,
-                unit: "單位",
-                description: "測試的描述",
-                content: "測試的說明",
-                is_enabled: 1,
-                imageUrl: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
+                title: "",
+                category: "",
+                origin_price: '',
+                price: '',
+                unit: '',
+                description: "",
+                content: "",
+                is_enabled: 0,
+                imageUrl: "",
                 imagesUrl: [
-                    'https://images.unsplash.com/photo-1517331156700-3c…8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1948&q=80',
-                    'https://images.unsplash.com/photo-1587300003388-59…8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
-                    'https://images.unsplash.com/photo-1517331156700-3c…8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1948&q=80',
-                    'https://images.unsplash.com/photo-1617093727343-37…8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
-                    'https://images.unsplash.com/photo-1511914265872-c4…8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1867&q=80'
+                    ''
                 ]
             },
             deleteId: ""
