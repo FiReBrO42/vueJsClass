@@ -1,62 +1,33 @@
-const {createApp} = Vue;
+import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
+
+const site = 'https://vue3-course-api.hexschool.io/v2/';
+
 const app = {
-    data(){
-        return{
-            user:{
-                username:'',
-                password:''
+    data() {
+        return {
+            user: {
+                username: '',
+                password: ''
             }
         }
     },
-    methods:{
-        sigin(){
-            let apiUrl = 'https://vue3-course-api.hexschool.io/v2/admin/signin'
-            axios.post(apiUrl,this.user)
-            .then(res=>{
-                const { token, expired } = res.data;
-                //設定axios header全域默認設定
-                axios.defaults.headers.common['Authorization'] = token;
-                //設定cookie
-                document.cookie = `firebro42=${token}; expires=${expired}`;
-                alert(res.data.message);
-                window.location="./admin.html";
-            })
-            .catch(err => {
-                alert(err.data.message);
-                console.log(err);
-            })
+    methods: {
+        sigin() {
+            let url = `${site}admin/signin`
+            axios.post(url, this.user)
+                .then((res) => {
+                    //解構式縮寫
+                    const { token, expired } = res.data;
+                    //設定cookie
+                    document.cookie = `firebro42=${token}; expires=${ new Date(expired)}`;
+                    alert(res.data.message);
+                    window.location = "./admin.html";
+                })
+                .catch((err) => {
+                    console.log();
+                    console.log(err);
+                })
         }
     }
 }
 createApp(app).mount('#app');
-
-/*
-const username = document.querySelector('#username');
-const password = document.querySelector('#password');
-
-let apiUrl = 'https://vue3-course-api.hexschool.io/v2/admin/signin'
-//帶入資料
-
-document.querySelector('.btn').addEventListener('click',(e)=>{
-    e.preventDefault();
-    
-    const user = {
-        username : username.value,
-        password : password.value
-    }
-    axios.post(apiUrl, user)
-    .then(res => {
-        const { token, expired } = res.data
-        //設定axios header全域默認設定
-        axios.defaults.headers.common['Authorization'] = token;
-        //設定cookie
-        document.cookie = `firebro42=${token}; expires=${expired}`;
-        alert(res.data.message)
-    })
-    .catch(err => {
-        alert(err.data.message)
-        console.log(err)
-    })
-})
-
-*/

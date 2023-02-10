@@ -1,117 +1,97 @@
-const { createApp } = Vue;
+import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
+
+const site = 'https://vue3-course-api.hexschool.io/v2';
+let apiPath = 'firebro42';
+
+let productModal = {};
+let delProductModal = {};
+
 const app = {
     data() {
         return {
             products: [],
-            template: {
-                title: "",
-                category: "",
-                origin_price: '',
-                price: '',
-                unit: '',
-                description: "",
-                content: "",
-                is_enabled: 0,
-                imageUrl: "",
-                imagesUrl: [
-                    ''
-                ]
+            tempProduct: {
+                imagesUrl: [],
             },
-            deleteId: ""
+            isNew: false,
         }
     },
     methods: {
-        //檢查
+        //檢查驗證API
         checkApi() {
-            const api = "https://vue3-course-api.hexschool.io/v2/api/user/check"
+            const api = `${site}/api/user/check`
             axios.post(api)
                 .then(res => {
                     alert("登入成功");
-                    this.getProduct();
+                    this.getProduct()
                 })
                 .catch(err => {
                     alert(err.data.message);
                     window.location = './index.html'
                 })
         },
-        //取得資料
-        getProduct() {
-            let apiUrl = 'https://vue3-course-api.hexschool.io/v2/api/firebro42/admin/products'
-            axios.get(apiUrl)
-                .then(res => {
-                    this.products = res.data.products
+        //取得產品API
+        getProducts() {
+            const url = `${site}/api/${apiPath}/admin/products/all`
+            axios.get(url)
+                .then((res) => {
+                    this.products = res.data.products;
                 })
-                .catch(err => {
-                    alert(err.response.data.message);
+                .catch((err) => {
+                    alert(err.data.message)
                 })
+
         },
-        //新增圖片
-        addImage() {
-            let inputValue = document.querySelector('#inputImageUrl').value;
-            this.template.imageUrl = inputValue;
-            this.template.imagesUrl.push(inputValue);
-        },
-        //刪除圖片
-        deleteImage() {
-            this.template.imageUrl = "";
-        },
-        //建立新的產品
-        addProduct() {
-            let newProduct = {
-                data: {
-                    ...this.template
+        //bootstrap modal
+        openModal(status, product) {
+            if (status === 'new') {
+                productModal.show();
+                this.isNew = true;
+                this.tempProduct = {
+                    imagesUrl: []
                 }
             }
-            if (!this.template.id) {
-                let apiUrl = "https://vue3-course-api.hexschool.io/v2/api/firebro42/admin/product"
-                axios.post(apiUrl, newProduct)
-                    .then(res => {
-                        console.log(this.products);
-                        alert(res.data.message)
-                        this.getProduct();
-                    })
-                    .catch(err => {
-                        alert(err.data.message)
-                    })
-            } else {
-                this.products.forEach((item, index) => {
-                    if (item.id === this.template.id) {
-                        let apiUrl = "https://vue3-course-api.hexschool.io/v2/api/firebro42/admin/product/"
-                        let id = item.id
-                        axios.put(`${apiUrl}${id}`, newProduct)
-                            .then(res => {
-                                alert(res.data.message)
-                                this.getProduct();
-                            })
-                            .catch(err => {
-                                alert(err.data.message)
-                            })
-                    }
-                })
-                this.template = {};
+            else if (status === 'edit') {
+                productModal.show();
+                this.isNew = false;
+                this.tempProduct = { ...product };
+            }
+            else if (status === 'del') {
+                delProductModal.show();
+                this.tempProduct = { ...product };
             }
         },
-        //編輯
-        editProduct(item1) {
-            this.template = { ...item1 };
-        }
-        ,
-        //刪除
-        //產生刪除ID
-        deleteProductId(item) {
-            this.deleteId = item.id.trim();
-        },
-        deleteProduct() {
-            let apiUrl = "https://vue3-course-api.hexschool.io/v2/api/firebro42/admin/product/"
-            let id = this.deleteId;
-            console.log(apiUrl, id);
-            axios.delete(`${apiUrl}${id}`)
-                .then(res => {
-                    alert(res.data.message)
-                    this.getProduct();
+        //新增 編輯 資料API
+        updataProduct() {
+            let url = `${site}/api/${apiPath}/admin/product`;
+            let method = `post`;
+//判定isnew 來選擇是否變更為編輯 axios
+            if (!this.isNew) {
+                url = `${site}/api/${apiPath}/admin/product/${this.tempProduct.id}`
+                method = 'put';
+            }
+
+            axios[method](url, { data: this.tempProduct })
+                .then(() => {
+                    this.getProducts();
+                    alert("成功");
+                    productModal.hide();
                 })
-                .catch(err => {
+                .catch((err) => {
                     alert(err.data.message)
+                })
+        },
+        //刪除指定商品 API
+        deleteProduct() {
+            let url = `${site}/api/${apiPath}/admin/product/${this.tempProduct.id}`;
+            axios.delete(url)
+                .then((res) => {
+                    alert('刪除成功')
+                    this.getProducts();
+                    delProductModal.hide();
+                })
+                .catch((err) => {
+                alert(err.data.message)
                 })
         }
     },
@@ -120,9 +100,13 @@ const app = {
         const token = document.cookie.replace(/(?:(?:^|.*;\s*)firebro42\s*\=\s*([^;]*).*$)|^.*$/, "$1");
         //設定axios header全域默認設定，
         axios.defaults.headers.common['Authorization'] = token;
+
         /*         this.checkApi(); */
-        this.checkApi();
-        console.log(token)
-    }
+        /*         this.checkApi(); */
+        this.getProducts()
+        //bootstrap modal JS 使用方法
+        productModal = new bootstrap.Modal('#productModal');
+        delProductModal = new bootstrap.Modal('#delProductModal');
+    },
 }
 createApp(app).mount('#app')
