@@ -19,13 +19,12 @@ const app = {
                     //解構式縮寫
                     const { token, expired } = res.data;
                     //設定cookie
-                    document.cookie = `firebro42=${token}; expires=${ new Date(expired)}`;
+                    document.cookie = `firebro42=${token}; expires=${new Date(expired)}`;
                     alert(res.data.message);
                     window.location = "./admin.html";
                 })
                 .catch((err) => {
-                    console.log();
-                    console.log(err);
+                    alert(err.data.message)
                 })
         }
     }

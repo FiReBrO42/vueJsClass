@@ -93,9 +93,6 @@ const app = createApp({
                     this.getProducts();
                     delProductModal.hide();
                 })
-                .catch((err) => {
-                alert(err.data.message)
-                })
         }
     },
     mounted() {
