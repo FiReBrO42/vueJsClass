@@ -22,7 +22,7 @@
     </thead>
     <tbody>
       <template v-if="cart.carts">
-        <tr  v-for="item in cart.carts" :key="item.id">
+        <tr v-for="item in cart.carts" :key="item.id">
           <td>
             <button
               type="button"
@@ -80,6 +80,91 @@
       </tr>
     </tfoot>
   </table>
+  <!-- 問卷 -->
+  <div class="my-5 row justify-content-center">
+    <v-form
+      ref="form"
+      class="col-md-6"
+      v-slot="{ errors }"
+      @submit.prevent="checkout ()"
+    >
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <v-field
+          id="email"
+          name="email"
+          type="email"
+          class="form-control"
+          :class="{
+            'is-invalid': errors['email'],
+            'is-valid': !errors['email'] && form.user.email
+          }"
+          placeholder="請輸入 Email"
+          rules="email|required"
+          v-model="form.user.email"
+        ></v-field>
+        <error-message name="email" class="invalid-feedback"></error-message>
+      </div>
+      <div class="mb-3">
+        <label for="name" class="form-label">收件人姓名</label>
+        <v-field
+          id="name"
+          name="姓名"
+          type="text"
+          class="form-control"
+          :class="{ 'is-invalid': errors['姓名'] }"
+          placeholder="請輸入姓名"
+          rules="required"
+          v-model="form.user.name"
+        ></v-field>
+        <error-message name="姓名" class="invalid-feedback"></error-message>
+      </div>
+
+      <div class="mb-3">
+        <label for="tel" class="form-label">收件人電話</label>
+        <v-field
+          id="tel"
+          name="電話"
+          type="text"
+          class="form-control"
+          :class="{ 'is-invalid': errors['電話'] }"
+          placeholder="請輸入電話"
+          :rules="isPhone"
+          v-model="form.user.tel"
+        ></v-field>
+        <error-message name="電話" class="invalid-feedback"></error-message>
+      </div>
+
+      <div class="mb-3">
+        <label for="address" class="form-label">收件人地址</label>
+        <v-field
+          id="address"
+          name="地址"
+          type="text"
+          class="form-control"
+          :class="{ 'is-invalid': errors['地址'] }"
+          placeholder="請輸入地址"
+          rules="required"
+          v-model="form.user.address"
+        ></v-field>
+        <error-message name="地址" class="invalid-feedback"></error-message>
+      </div>
+
+      <div class="mb-3">
+        <label for="message" class="form-l abel">留言</label>
+        <textarea
+          id="message"
+          class="form-control"
+          cols="30"
+          rows="10"
+          v-model="form.message"
+        ></textarea>
+      </div>
+      <div class="text-end">
+        <button type="submit" class="btn btn-danger">送出訂單</button>
+      </div>
+    </v-form>
+  </div>
 </template>
 
 <script>
@@ -93,12 +178,12 @@ export default {
       loadingItem: '',
       form: {
         user: {
-          name: 'test',
-          email: 'test@gmail.com',
-          tel: '0912346768',
-          address: 'kaohsiung'
+          name: '',
+          email: '',
+          tel: '',
+          address: ''
         },
-        message: '這是留言'
+        message: ''
       }
     }
   },
@@ -134,7 +219,9 @@ export default {
       this.loadingItem = item.id
 
       this.$http
-        .put(`${VITE_APP_URL}/v2/api/${VITE_APP_PATH}/cart/${item.id}`, { data })
+        .put(`${VITE_APP_URL}/v2/api/${VITE_APP_PATH}/cart/${item.id}`, {
+          data
+        })
         .then((res) => {
           // console.log('調整購物車', res.data.data);
           this.getCarts()
@@ -169,6 +256,10 @@ export default {
         .then((res) => {
           console.log('結帳', res.data)
         })
+    },
+    isPhone (value) {
+      const phoneNumber = /^(09)[0-9]{8}$/
+      return phoneNumber.test(value) ? true : '需要正確的電話號碼'
     }
   },
 
