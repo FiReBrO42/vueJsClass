@@ -23,7 +23,7 @@ git commit -m 'deploy'
 # if you are deploying to https://FiReBrO42.github.io
 # git push -f git@github.com:FiReBrO42/FiReBrO42.github.io.git main
 
-# if you are deploying to https://FiReBrO42.github.io/vue-hk-week6
-git push -f https://github.com/FiReBrO42/vue-hk-week6.git main:gh-pages
+# if you are deploying to https://FiReBrO42.github.io/vueJsClass/week6
+git push -f https://github.com/FiReBrO42/vueJsClass.git main:gh-pages
 
 cd -
