@@ -16,7 +16,12 @@
           >
           <button
             type="button"
-            class="btn btn-outline-danger"
+            class="btn"
+            :class="{
+              'btn-outline-primary': loadingItem,
+              'btn-outline-danger': !loadingItem
+            }"
+            :disabled="loadingItem"
             @click="addToCart(product.id)"
           >
             加入購物車
@@ -43,7 +48,8 @@ export default {
           address: ''
         },
         message: ''
-      }
+      },
+      loadingItem: false
     }
   },
   components: {
@@ -55,12 +61,17 @@ export default {
       this.$http
         .get(`${VITE_APP_URL}/v2/api/${VITE_APP_PATH}/products/all`)
         .then((res) => {
+          this.$showLoading()
           this.products = res.data.products
-          console.log('產品列表', res.data.products)
+          // console.log('產品列表', res.data.products)
+        })
+        .catch((err) => {
+          alert(err.response.data.message)
         })
     },
     // 加入購物車API
     addToCart (id) {
+      this.loadingItem = true
       // 建立要帶入的資料
       const data = {
         product_id: id,
@@ -69,7 +80,12 @@ export default {
       this.$http
         .post(`${VITE_APP_URL}/v2/api/${VITE_APP_PATH}/cart`, { data })
         .then((res) => {
-          console.log(res.data.message)
+          // console.log(res.data.message)
+          alert(res.data.message)
+          this.loadingItem = false
+        })
+        .catch((err) => {
+          alert(err.response.data.message)
         })
     }
   },

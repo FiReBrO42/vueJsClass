@@ -6,6 +6,7 @@
     <button
       class="btn btn-outline-danger"
       type="button"
+      :disabled="cart.total === 0"
       @click="deleteAllCart()"
     >
       清空購物車
@@ -15,12 +16,16 @@
     <thead>
       <tr>
         <th></th>
-        <th>品名</th>
+        <th style="width: 200px">品名</th>
         <th style="width: 150px">數量/單位</th>
-        <th>單價</th>
+        <th style="width: 100px">單價</th>
+        <th>單一品項總額(小計)</th>
       </tr>
     </thead>
     <tbody>
+      <tr v-if="cart.total === 0">
+        <div>目前購物車沒有東西</div>
+      </tr>
       <template v-if="cart.carts">
         <tr v-for="item in cart.carts" :key="item.id">
           <td>
@@ -42,7 +47,7 @@
           </td>
           <td>
             <div class="input-group input-group-sm">
-              <div class="input-group mb-3">
+              <div class="input-group my-3">
                 <input
                   type="number"
                   class="form-control"
@@ -63,6 +68,9 @@
               </div>
             </div>
           </td>
+          <td>
+            {{ item.product.price }}
+          </td>
           <td class="text-end">
             {{ item.total }}
           </td>
@@ -71,10 +79,12 @@
     </tbody>
     <tfoot>
       <tr>
+        <td></td>
         <td colspan="3" class="text-end">總計</td>
         <td class="text-end">{{ cart.total }}</td>
       </tr>
       <tr>
+        <td></td>
         <td colspan="3" class="text-end text-success">折扣價</td>
         <td class="text-end text-success">{{ cart.final_total }}</td>
       </tr>
@@ -86,7 +96,7 @@
       ref="form"
       class="col-md-6"
       v-slot="{ errors }"
-      @submit.prevent="checkout ()"
+      @submit="checkout()"
     >
       <div class="mb-3">
         <label for="email" class="form-label">Email</label>
@@ -174,7 +184,7 @@ export default {
     return {
       productId: '',
       products: [],
-      cart: [],
+      cart: [{ carts: [] }],
       loadingItem: '',
       form: {
         user: {
@@ -193,8 +203,12 @@ export default {
       this.$http
         .get(`${VITE_APP_URL}/v2/api/${VITE_APP_PATH}/products/all`)
         .then((res) => {
+          this.$showLoading()
           this.products = res.data.products
           // console.log("產品列表:", res);
+        })
+        .catch((err) => {
+          alert(err.response.data.message)
         })
     },
     openModal (id) {
@@ -205,8 +219,12 @@ export default {
       this.$http
         .get(`${VITE_APP_URL}/v2/api/${VITE_APP_PATH}/cart`)
         .then((res) => {
+          this.$showLoading()
           this.cart = res.data.data
-          // console.log('購物車', res.data.data);
+          // console.log('購物車', res.data.data)
+        })
+        .catch((err) => {
+          alert(err.response.data.message)
         })
     },
     // 新增API
@@ -224,8 +242,12 @@ export default {
         })
         .then((res) => {
           // console.log('調整購物車', res.data.data);
+          alert(res.data.message)
           this.getCarts()
           this.loadingItem = '' // 清空重設
+        })
+        .catch((err) => {
+          alert(err.response.data.message)
         })
     },
     // 刪除購物車特定選項API
@@ -235,8 +257,12 @@ export default {
         .delete(`${VITE_APP_URL}/v2/api/${VITE_APP_PATH}/cart/${item.id}`)
         .then((res) => {
           // console.log('刪除購物車', res.data);
+          alert(res.data.message)
           this.getCarts()
           this.loadingItem = '' // 清空重設
+        })
+        .catch((err) => {
+          alert(err.response.data.message)
         })
     },
     // 刪除整個購物車API
@@ -244,8 +270,12 @@ export default {
       this.$http
         .delete(`${VITE_APP_URL}/v2/api/${VITE_APP_PATH}/carts`)
         .then((res) => {
-          console.log('刪除全部購物車', res.data)
+          // console.log('刪除全部購物車', res.data)
+          alert(res.data.message)
           this.getCarts()
+        })
+        .catch((err) => {
+          alert(err.response.data.message)
         })
     },
     // 結帳API
@@ -254,7 +284,23 @@ export default {
       this.$http
         .post(`${VITE_APP_URL}/v2/api/${VITE_APP_PATH}/order`, { data })
         .then((res) => {
-          console.log('結帳', res.data)
+          // console.log('結帳', res.data);
+          this.form = {
+            user: {
+              name: '',
+              email: '',
+              tel: '',
+              address: ''
+            },
+            message: ''
+          }
+          this.getCarts()
+          alert(res.data.message)
+          window.location = '/#/products'
+          // console.log('結帳', res.data)
+        })
+        .catch((err) => {
+          alert(err.response.data.message)
         })
     },
     isPhone (value) {

@@ -23,7 +23,10 @@ export default {
         .get(`${VITE_APP_URL}/v2/api/${VITE_APP_PATH}/product/${id}`)
         .then((res) => {
           this.product = res.data.product
-          console.log('單一產品', res.data.product)
+          // console.log('單一產品', res.data.product)
+        })
+        .catch((err) => {
+          alert(err.response.data.message)
         })
     }
   },

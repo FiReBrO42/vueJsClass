@@ -35,7 +35,7 @@ export default {
 
       const url = `${VITE_APP_URL}/api/user/check`
       this.$http.post(url).then((res) => {
-        console.log(res)
+        // console.log(res)
         // 如果驗證沒有過，就會跳轉
         if (!res.data.success) {
           alert(res.data.message)
