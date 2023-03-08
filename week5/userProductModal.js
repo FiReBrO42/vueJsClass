@@ -15,11 +15,11 @@ export default {
   watch: {
     id() {
       if (this.id) {
-        //console.log('productId', this.id);
+        // console.log('productId', this.id);
         axios.get(`${apiUrl}v2/api/${apiPath}/product/${this.id}`)
           .then((res) => {
             this.temProduct = res.data.product;
-            //取完資料後顯示 Modal
+            // 取完資料後顯示 Modal
             this.qty = 0;
             this.modal.show();
           })
@@ -34,7 +34,7 @@ export default {
   mounted() {
     this.modal = new bootstrap.Modal(this.$refs.modal);
     this.$refs.modal.addEventListener('hidden.bs.modal', (event) => {
-      console.log('Modal關閉了');
+      // console.log('Modal關閉了');
       this.openModal('');
     })
   },

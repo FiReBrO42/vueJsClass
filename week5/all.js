@@ -78,13 +78,14 @@ Vue.createApp({
           address: ""
         },
         message: ""
-      }
+      },
+      loadState: true
     }
   },
 
-   components: {
+  components: {
     //productModal,
-  }, 
+  },
 
   methods: {
     getProducts() {
@@ -192,14 +193,17 @@ Vue.createApp({
     },
     //VueLoading
     showLoading() {
+      this.loadState = true;
       let loader = this.$loading.show({
         color: '#999',
         width: 64,
         height: 64
       });
-      setTimeout(() => {        // setTimeout設定關閉時間
+      setTimeout(() => {
+        // setTimeout設定關閉時間
+        this.loadState = false;
         loader.hide();
-      }, 1000)
+      }, 1500)
     }
   },
 
@@ -210,7 +214,7 @@ Vue.createApp({
 })
   //使用productModal元件
   .component('productModal', userProductModal)
-  
+
   //全域註冊
   .component('VForm', VeeValidate.Form)
   .component('VField', VeeValidate.Field)
