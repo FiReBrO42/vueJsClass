@@ -1,0 +1,1 @@
+import{_ as o,o as t,c as n,F as c,d as e}from"./index-c14b5a77.js";const s={},a=e("div",null," 404頁面 ",-1),r=e("h1",null,"這個頁面找不到!!",-1);function _(l,d){return t(),n(c,null,[a,r],64)}const f=o(s,[["render",_]]);export{f as default};
